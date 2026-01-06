@@ -2,7 +2,7 @@ trigger:
   - main   # Run pipeline when code is pushed to main
 
 pool:
-  vmImage: 'ubuntu-latest'
+  name: 'azureagent'
 
 steps:
 # 1. Install Node.js
