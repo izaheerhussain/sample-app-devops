@@ -1,0 +1,46 @@
+trigger:
+  - main   # Run pipeline when code is pushed to main
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+steps:
+# 1. Install Node.js
+- task: NodeTool@0
+  inputs:
+    versionSpec: '18.x'
+  displayName: 'Install Node.js'
+
+# 2. Install dependencies
+- script: |
+    npm install
+  displayName: 'Install dependencies'
+
+# 3. Run unit tests
+- script: |
+    npm test
+  displayName: 'Run unit tests'
+
+# 4. Publish test results (Jest outputs to console, so we capture logs)
+- task: PublishTestResults@2
+  inputs:
+    testResultsFiles: '**/test-results.xml'
+    testResultsFormat: 'JUnit'
+    failTaskOnFailedTests: true
+  condition: succeededOrFailed()
+
+# 5. Archive build artifacts (e.g., app source, Dockerfile)
+- task: CopyFiles@2
+  inputs:
+    SourceFolder: '$(System.DefaultWorkingDirectory)'
+    Contents: |
+      server.js
+      package.json
+      Dockerfile
+    TargetFolder: '$(Build.ArtifactStagingDirectory)'
+
+- task: PublishBuildArtifacts@1
+  inputs:
+    PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+    ArtifactName: 'drop'
+    publishLocation: 'Container'
