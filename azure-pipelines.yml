@@ -84,6 +84,6 @@ stages:
         command: 'buildAndPush'
         repository: 'azurecicdpoc'   # ACR repo name
         dockerfile: '$(Pipeline.Workspace)/artifacts/Dockerfile'
-        containerRegistry: 'acr-connection'   # Service connection name
+        containerRegistry: 'ACR'   # Service connection name
         tags: |
           $(Build.BuildId)
