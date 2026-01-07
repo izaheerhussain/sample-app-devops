@@ -4,6 +4,12 @@ resource "azurerm_resource_group" "rg" {
   location = var.location
 }
 
+# Reference existing ACR
+data "azurerm_container_registry" "acr" {
+  name                = "azurecicdpoc"       # e.g. azurecicdpoc
+  resource_group_name = "azure-cicd"      # RG where ACR exists
+}
+
 # AKS Cluster
 resource "azurerm_kubernetes_cluster" "aks" {
   name                = var.aks_name
@@ -26,9 +32,9 @@ resource "azurerm_kubernetes_cluster" "aks" {
   }
 }
 
-# Attach ACR to AKS
 resource "azurerm_role_assignment" "aks_acr_pull" {
   principal_id         = azurerm_kubernetes_cluster.aks.kubelet_identity[0].object_id
   role_definition_name = "AcrPull"
-  scope                = azurerm_container_registry.acr.id
+  scope                = data.azurerm_container_registry.acr.id
 }
+
