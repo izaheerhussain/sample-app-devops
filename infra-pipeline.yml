@@ -1,4 +1,11 @@
-trigger: none   # No auto-trigger, run manually when infra changes
+trigger:
+  branches:
+    include:
+      - main
+      - infra   # or whichever branch you use for infra changes
+  paths:
+    include:
+      - terraform/**   # only run when files under terraform/ change
 
 pool:
   name: 'azureagent'
