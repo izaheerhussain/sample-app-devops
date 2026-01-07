@@ -1,0 +1,26 @@
+trigger: none   # No auto-trigger, run manually when infra changes
+
+pool:
+  name: 'azureagent'
+
+stages:
+- stage: Terraform
+  displayName: "Provision AKS with Terraform"
+  jobs:
+  - job: TerraformJob
+    steps:
+    - task: TerraformInstaller@0
+      displayName: 'Install Terraform'
+      inputs:
+        terraformVersion: '1.5.7'
+
+    - script: |
+        terraform init
+        terraform plan -out=tfplan
+      workingDirectory: terraform
+      displayName: 'Terraform Init & Plan'
+
+    - script: |
+        terraform apply -auto-approve tfplan
+      workingDirectory: terraform
+      displayName: 'Terraform Apply'
