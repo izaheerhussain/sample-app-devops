@@ -19,3 +19,5 @@ coverage/
 
 # Build artifacts
 dist/
+
+*.tfvars
