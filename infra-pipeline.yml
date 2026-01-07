@@ -2,7 +2,7 @@ trigger:
   branches:
     include:
       - main
-      - infra   # or whichever branch you use for infra changes
+      - develop   # or whichever branch you use for infra changes
   paths:
     include:
       - terraform/**   # only run when files under terraform/ change
