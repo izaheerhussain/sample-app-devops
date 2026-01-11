@@ -1,7 +1,7 @@
 replicaCount: 2
 
 image:
-  repository: <your-acr-name>.azurecr.io/azurecicdpoc
+  repository: azurecicdpoc.azurecr.io/azurecicdpoc
   tag: latest
   pullPolicy: IfNotPresent
 
