@@ -87,3 +87,31 @@ stages:
         containerRegistry: 'ACR'   # Service connection name
         tags: |
           $(Build.BuildId)
+
+# -------------------
+# Stage 4: Helm Deploy to AKS
+# -------------------
+- stage: Deploy
+  displayName: "Deploy to AKS with Helm"
+  dependsOn: Docker
+  condition: succeeded()
+  jobs:
+  - job: HelmDeployJob
+    steps:
+    - task: HelmInstaller@1
+      inputs:
+        helmVersionToInstall: 'latest'
+
+    - task: HelmDeploy@0
+      inputs:
+        connectionType: 'Kubernetes'
+        azureSubscription: 'AKS'
+        azureResourceGroup: 'azure-cicd'
+        kubernetesCluster: 'azuredevops'
+        namespace: 'sample-app'
+        command: 'upgrade'
+        chartType: 'FilePath'
+        chartPath: 'charts/node-app'
+        releaseName: 'node-app'
+        overrideValues: |
+          image.tag=$(Build.BuildId)
