@@ -104,10 +104,8 @@ stages:
 
     - task: HelmDeploy@0
       inputs:
-        connectionType: 'Kubernetes'
-        azureSubscription: 'AKS'
-        azureResourceGroup: 'azure-cicd'
-        kubernetesCluster: 'azuredevops'
+        connectionType: 'Kubernetes Service Connection'
+        kubernetesServiceConnection: 'AKS'
         namespace: 'sample-app'
         command: 'upgrade'
         chartType: 'FilePath'
@@ -115,3 +113,4 @@ stages:
         releaseName: 'node-app'
         overrideValues: |
           image.tag=$(Build.BuildId)
+
